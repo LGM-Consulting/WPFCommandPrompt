@@ -1,0 +1,10 @@
+﻿<Window x:Class="WPFCommandPromptDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="200" Width="400"
+        WindowStartupLocation="CenterScreen">
+    <Grid Background="{StaticResource GreyGradient}">
+        <Label Content="WPF Command Prompt Demo" Height="137" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalContentAlignment="Center"
+               Margin="12,12,0,0" FontSize="22" Name="Label1" VerticalAlignment="Top" Width="354" />
+    </Grid>
+</Window>

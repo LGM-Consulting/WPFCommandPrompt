@@ -1,23 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Windows.Media;
-using System.Text.RegularExpressions;
-using System.Xml.Serialization;
-using System.Xml;
-using System.Windows;
+﻿// Author: Adrian Hum
+// Project: WPFCommandPrompt/Utility.cs
+// 
+// Created : 2016-01-06  18:29 
+// Modified: 2016-01-06 18:36)
 
-namespace WPFCommandPrompt
-{
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Media;
+using System.Xml;
+using System.Xml.Serialization;
+
+namespace WPFCommandPrompt {
     /// <summary>
-    /// Common utilities
+    ///     Common utilities
     /// </summary>
-    public static class Utility
-    {
+    public static class Utility {
         /// <summary>
-        /// Version of the current assembly.
+        ///     Version of the current assembly.
         /// </summary>
         /// <param name="includeMinor">if set to <c>true</c> [include minor].</param>
         /// <param name="includeBuild">if set to <c>true</c> [include build].</param>
@@ -25,26 +28,35 @@ namespace WPFCommandPrompt
         /// <returns>Assembly version as a string in Major.Minor.Build.Revision format.</returns>
         public static string AssemblyVersion(bool includeMinor, bool includeBuild, bool includeRevision)
         {
-            string pVersion = string.Empty;
+            var pVersion = string.Empty;
 
             try
             {
-                Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+                var version = Assembly.GetExecutingAssembly().GetName().Version;
 
                 pVersion = version.Major.ToString();
 
-                if (includeMinor) { pVersion += "." + version.Minor.ToString(); }
-
-                if (includeBuild) 
+                if (includeMinor)
                 {
-                    if (!includeMinor) { pVersion += ".x"; }
-                    pVersion += "." + version.Build.ToString(); 
+                    pVersion += "." + version.Minor;
                 }
 
-                if (includeRevision) 
+                if (includeBuild)
                 {
-                    if (!includeBuild) { pVersion += ".x"; }
-                    pVersion += "." + version.Revision.ToString(); 
+                    if (!includeMinor)
+                    {
+                        pVersion += ".x";
+                    }
+                    pVersion += "." + version.Build;
+                }
+
+                if (includeRevision)
+                {
+                    if (!includeBuild)
+                    {
+                        pVersion += ".x";
+                    }
+                    pVersion += "." + version.Revision;
                 }
             }
             catch
@@ -56,7 +68,7 @@ namespace WPFCommandPrompt
         }
 
         /// <summary>
-        /// Converts a string color value to a Brush.
+        ///     Converts a string color value to a Brush.
         /// </summary>
         /// <param name="colorValue">The string value as a color name or a hex value</param>
         /// <returns>Brush</returns>
@@ -68,8 +80,8 @@ namespace WPFCommandPrompt
             {
                 try
                 {
-                    BrushConverter bc = new BrushConverter();
-                    brush = (Brush)bc.ConvertFrom(colorValue);
+                    var bc = new BrushConverter();
+                    brush = (Brush) bc.ConvertFrom(colorValue);
                 }
                 catch
                 {
@@ -80,7 +92,7 @@ namespace WPFCommandPrompt
             {
                 try
                 {
-                    System.Windows.Media.BrushConverter bb = new System.Windows.Media.BrushConverter();
+                    var bb = new BrushConverter();
                     brush = bb.ConvertFromString(colorValue) as SolidColorBrush;
                 }
                 catch
@@ -93,7 +105,7 @@ namespace WPFCommandPrompt
         }
 
         /// <summary>
-        /// Converts a string (e.g. "1,1,1,1") into a Thinkness object.
+        ///     Converts a string (e.g. "1,1,1,1") into a Thinkness object.
         /// </summary>
         /// <param name="thickness">The thickness as a string.</param>
         /// <returns>Thickness</returns>
@@ -101,7 +113,7 @@ namespace WPFCommandPrompt
         {
             if (!string.IsNullOrEmpty(thickness))
             {
-                string[] thickarray = Regex.Split(thickness, ",");
+                var thickarray = Regex.Split(thickness, ",");
 
                 double left = 0;
                 double top = 0;
@@ -132,42 +144,39 @@ namespace WPFCommandPrompt
         }
 
         /// <summary>
-        /// Determines if a string is a hex color value.
+        ///     Determines if a string is a hex color value.
         /// </summary>
         /// <param name="hexValue">The hex value string.</param>
         /// <returns>
-        ///   <c>true</c> if the string is a hex color; otherwise, <c>false</c>.
+        ///     <c>true</c> if the string is a hex color; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsHexColor(string hexValue)
         {
-            string pattern = @"^?\#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3}|[a-fA-F0-9]{8})$";
+            var pattern = @"^?\#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3}|[a-fA-F0-9]{8})$";
             return Regex.IsMatch(hexValue, pattern);
         }
 
         /// <summary>
-        /// Reads an xml file and converts it to its correct object type.
+        ///     Reads an xml file and converts it to its correct object type.
         /// </summary>
         /// <typeparam name="T">The object type</typeparam>
         /// <param name="path">The path including the file name.</param>
         /// <returns>Object of type T</returns>
-        public static T XMLFileToObject<T>(string path)
+        public static T XmlFileToObject<T>(string path)
         {
             try
             {
-                FileInfo fi = new FileInfo(path);
+                var fi = new FileInfo(path);
                 if (fi.Exists)
                 {
-                    XmlSerializer xSerializer = new XmlSerializer(typeof(T));
-                    using (FileStream fs = new FileStream(path, FileMode.Open))
+                    var xSerializer = new XmlSerializer(typeof (T));
+                    using (var fs = new FileStream(path, FileMode.Open))
                     {
                         XmlReader xReader = new XmlTextReader(fs);
-                        return (T)xSerializer.Deserialize(xReader);
+                        return (T) xSerializer.Deserialize(xReader);
                     }
                 }
-                else
-                {
-                    throw new FileNotFoundException("Not found: " + path);
-                }
+                throw new FileNotFoundException("Not found: " + path);
             }
             catch (Exception ex)
             {
@@ -176,7 +185,7 @@ namespace WPFCommandPrompt
         }
 
         /// <summary>
-        /// Takes a serializable object and saves it to an xml file.
+        ///     Takes a serializable object and saves it to an xml file.
         /// </summary>
         /// <typeparam name="T">The object type</typeparam>
         /// <param name="path">The path including the file name.</param>
@@ -185,7 +194,7 @@ namespace WPFCommandPrompt
         {
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(T));
+                var serializer = new XmlSerializer(typeof (T));
                 using (TextWriter textWriter = new StreamWriter(path))
                 {
                     serializer.Serialize(textWriter, obj);
@@ -199,7 +208,7 @@ namespace WPFCommandPrompt
         }
 
         /// <summary>
-        /// Writes text to a file.
+        ///     Writes text to a file.
         /// </summary>
         /// <param name="path">The path including the file name.</param>
         /// <param name="text">The text to write.</param>

@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// Author: Adrian Hum
+// Project: WPFCommandPrompt/ConsoleSettingsManager.cs
+// 
+// Created : 2016-01-06  18:29 
+// Modified: 2016-01-06 18:35)
+
+using System;
 using System.IO;
 
-namespace WPFCommandPrompt
-{
+namespace WPFCommandPrompt.ConsoleSettings {
     /// <summary>
-    /// Manages the loading/saving of console settings.
+    ///     Manages the loading/saving of console settings.
     /// </summary>
-    internal static class ConsoleSettingsManager
-    {
+    internal static class ConsoleSettingsManager {
         /// <summary>
-        /// Loads the default settings.
+        ///     Loads the default settings.
         /// </summary>
         /// <returns>Console Settings object with defaults</returns>
         public static ConsoleSettings LoadDefaults()
@@ -21,7 +22,7 @@ namespace WPFCommandPrompt
         }
 
         /// <summary>
-        /// Reads the settings from disk.
+        ///     Reads the settings from disk.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="fileName">Name of the file.</param>
@@ -30,8 +31,11 @@ namespace WPFCommandPrompt
         {
             try
             {
-                if (!path.EndsWith(@"\\") || !path.EndsWith(@"\")) { path += "\\"; }
-                return Utility.XMLFileToObject<ConsoleSettings>(path + fileName);
+                if (!path.EndsWith(@"\\") || !path.EndsWith(@"\"))
+                {
+                    path += "\\";
+                }
+                return Utility.XmlFileToObject<ConsoleSettings>(path + fileName);
             }
             catch (FileNotFoundException)
             {
@@ -44,12 +48,12 @@ namespace WPFCommandPrompt
         }
 
         /// <summary>
-        /// Sets the default console setting.
+        ///     Sets the default console setting.
         /// </summary>
         /// <returns>ConsoleSettings object with defaults</returns>
         private static ConsoleSettings SetDefaults()
         {
-            ConsoleSettings settings = new ConsoleSettings
+            var settings = new ConsoleSettings
             {
                 AllowEmptyCommand = false,
                 ConsoleTitle = "WPF Command Prompt - V" + Utility.AssemblyVersion(true, true, false),
@@ -70,22 +74,26 @@ namespace WPFCommandPrompt
                 Prompt = ">",
                 StyleThemeIndex = 0,
                 UseInternalCommandParsing = true,
-                WelcomeMessage = "---Welcome to WPF Command Prompt - Verson " + Utility.AssemblyVersion(true, true, true) + "---"
+                WelcomeMessage =
+                    "---Welcome to WPF Command Prompt - Verson " + Utility.AssemblyVersion(true, true, true) + "---"
             };
 
             return settings;
         }
 
         /// <summary>
-        /// Writes the settings to disk.
+        ///     Writes the settings to disk.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="consoleSettings">The console settings</param>
         public static void SaveSettings(string path, string fileName, ConsoleSettings consoleSettings)
         {
-            if (!path.EndsWith(@"\\") || !path.EndsWith(@"\")) { path += "\\"; }
-            Utility.ObjectToXMlFile<ConsoleSettings>(path + fileName, consoleSettings);
+            if (!path.EndsWith(@"\\") || !path.EndsWith(@"\"))
+            {
+                path += "\\";
+            }
+            Utility.ObjectToXMlFile(path + fileName, consoleSettings);
         }
     }
 }
