@@ -1,4 +1,4 @@
-# WcfCommandPrompt
+# WPFCommandPrompt
 ![screen shot](https://github.com/LGM-Consulting/WcfCommandPrompt/blob/master/logo.png)
 
 WPF Command Prompt is a command line console that comes with a number of features including:
